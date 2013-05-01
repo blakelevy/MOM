@@ -1,8 +1,0 @@
-%% Meshing File for right PEC cylinder
-clc;clear;
-%% import constants.m
-constants
-%% create mesh
-diameter = 10*lamb0;
-fd = @(p) sqrt(sum(p.^2,2))-1;
-[p t] = distmesh2d(fd,@huniform,0.2,[-1,-1;1,1],[]);
