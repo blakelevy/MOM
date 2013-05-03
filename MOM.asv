@@ -18,7 +18,7 @@ R(2,:) = y;
 for i = 1:M
     for j = 1:M
         if (i ~= j)
-            Z(i,j) = (k0/4*1j)*create_Z(k0, T(i), R(:,i), R(:,j));
+            Z(i,j) = create_Z(k0, T(i), R(:,i)
         end
     end
 end
