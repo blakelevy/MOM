@@ -1,0 +1,8 @@
+function [ M ] = create_input( X, Y)
+%create_input Summary of this function goes here
+%   Detailed explanation goes here
+M = [((X(2:end)- X(1:end-1))./2);((Y(2:end)-Y(1:end-1))./2)];
+
+
+end
+
