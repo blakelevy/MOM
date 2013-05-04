@@ -1,6 +1,6 @@
 %% Meshing File for right PEC cylinder
 clc;clear;
-addpath C:\Users\Blake\Documents\GitHub\MOM\distmesh
+addpath distmesh
 %% import constants.m
 constants
 %% create mesh
