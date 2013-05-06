@@ -1,8 +1,9 @@
-function [ X, Y ] = testpts( x, y, S, q)
+function [ P ] = testpts( x, y, S, q)
 %testpts Creates quadrature points on elements
 %   Detailed explanation goes here
+P = zeros(2,q);
 [t, ~] = qrule(q);
-X = x+t*S(1);
-Y = y+t*S(2);
+P(1,:) = x+t*S(1);
+P(2,:) = y+t*S(2);
 end
 
