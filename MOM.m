@@ -5,7 +5,7 @@ Q = [10]; % q-point Quadrature
 for G = 1:length(Q)
     q = Q(G);
     constants
-    M = 10; % Number of elements
+    M = 20; % Number of elements
     N = M+1; % Number of nodes
     r = 4*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
@@ -26,7 +26,7 @@ for G = 1:length(Q)
                 Z(i,j) = (k0/4/1j)*create_Z(k0, S(:,i)/L(i), R(:,i), R(:,j),S(:,i),S(:,j),q);
             end  
         end
-        V(i) = create_input(k0,theta1,Hzo,R(:,i));
+        V(i) = create_input(k0,theta1,Hzo,R(:,i),S(:,i),q);
     end
 
     I = zeros(M,1);
