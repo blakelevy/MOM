@@ -1,13 +1,13 @@
 %% Project #3 MOM
 % Authors: Dayo Lawal and Blake Levy
 clc;clear;
-Q = [10]; % q-point Quadrature
+Q = [5]; % q-point Quadrature
 for G = 1:length(Q)
     q = Q(G);
     constants
-    M = 20; % Number of elements
+    M = 160; % Number of elements
     N = M+1; % Number of nodes
-    r = 4*lamb0; % radius of circle
+    r = 10*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
     % [P] = testpts(x(5),y(5),S(:,5),q);
     %% Z, V and I
