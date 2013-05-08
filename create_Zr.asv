@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-function [ b ] = create_Z( k, Ts, rs, ro, Q)
-=======
-function [ Z ] = create_Z(k, Ts, rs, ro,Ss,So,Q)
->>>>>>> c196911870703178082ba8d6370e679830c0edb8
+function [ Z ] = create_Z(k, Ts, rs, ro,Ss,So,Q,flags,flago)
 %create_Z Summary of this function goes here
 %   Detailed explanation goes here
 % k propagation constant
@@ -12,7 +8,9 @@ function [ Z ] = create_Z(k, Ts, rs, ro,Ss,So,Q)
 % Q points for quadrature rule
 % Q point Quadrature rule (eg: 1-point Quadrature)
 % find the distance between source and observer
-[~,w] = qrule(Q);
+% flags identifies which side of rooftop for SOURCE
+% flago identifies which side of rooftop for OBSERVER
+[t,w] = qrule(Q);
 Ps = testpts(rs(1),rs(2),Ss,Q);
 Po = testpts(ro(1),ro(2),So,Q);
 b = zeros(Q,Q);
@@ -30,7 +28,7 @@ for i = 1:Q
         b(i,j) = besselh(1,2,k*Pmag)*z_comp(3);
     end
 end
+% I believe this is where we need to consider the rooftop functions
 Z = (b*w')'*w';
-V = (w*b')*w';
 end
 
