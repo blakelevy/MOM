@@ -1,12 +1,12 @@
 %% Project #3 MOM
 % Authors: Dayo Lawal and Blake Levy
 clc;clear;
-Q = [1]; % q-point Quadrature
+Q = [1 10]; % q-point Quadrature
 for G = 1:length(Q)
     q = Q(G);
     constants
     tol = 1e-9; % Tolerance for GMRES
-    M = 50; % Number of elements
+    M = 160; % Number of elements
     N = M+1; % Number of nodes
     r = 10*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);

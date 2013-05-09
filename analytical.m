@@ -5,7 +5,7 @@ constants
 n = 50; % number of terms
 r = lamb0/2/pi;
 ka = 10*k0*r; % ka = k*a --> (2pi/lambda)*(lambda) --> 2pi : if r = lambda
-E0 = 1;%w*mu0*pi*r/2;
+E0 = w*mu0*pi*r/2;
 theta = 0:2*pi/(2*n):2*pi;
 J = -2*E0/w/mu0/pi/r*ones(1,length(theta));
 for t = 1:length(theta)
