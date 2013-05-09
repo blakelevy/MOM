@@ -2,7 +2,7 @@
 % graphs geometry used for MOM calculations
 clc;clear;
 constants
-M = 160;
+M = 5*160;
 r = 1;
 q = 1;
 [x y theta S slope L ] = mesh_circle(M,r);

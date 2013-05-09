@@ -23,14 +23,15 @@ for i = 1:Q
         T(1:2) = Ts;
         T(3) = 0;
         z_comp = cross(T,Punit);
-        if Pmag <= (2*pi/k)/20
-            b(i,j) = besselh(1,2,k*Pmag)*z_comp(3) - 1j*2/pi/(k*Pmag);
+        if Pmag <= sqrt(2)*(2*pi/k)/10
+            b(i,j) = (besselh(1,2,k*Pmag) - 1j*2/pi/(k*Pmag))*z_comp(3);
+%               b(i,j) = 1j*2/pi/(k*Pmag);
         else
             b(i,j) = besselh(1,2,k*Pmag)*z_comp(3);
         end
     end
 end
 Z = (b*w')'*w';
-V = (w*b')*w';
+% V = (w*b')*w';
 end
 

@@ -5,14 +5,14 @@ Q = [1]; % q-point Quadrature
 for G = 1:length(Q)
     q = Q(G);
     constants
-    tol = 1e-9; % Tolerance for GMRES
+    tol = 1e-10; % Tolerance for GMRES
     M = 5*160; % Number of elements
     N = M+1; % Number of nodes
     r = pi*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
     % [P] = testpts(x(5),y(5),S(:,5),q);
     %% Z, V and I
-    theta1 = 0*pi/180;
+    theta1 = 180*pi/180;
     Hzo = 1;
     V = zeros(M,1);
 %     [V, m] = create_input(x,y,k0, theta1, Ez0);
@@ -32,7 +32,7 @@ for G = 1:length(Q)
 
 %     I = zeros(M,1);
 %     I = Z\V;
-    I = gmres(Z,V,[],tol);
+    I = gmres(Z,V,M,tol,M);
     hold on
     if q == 10
     plot(abs(I./V),'k')
@@ -40,6 +40,7 @@ for G = 1:length(Q)
        plot(abs(I./V))
     end
 end
+hold off
 
 
 
