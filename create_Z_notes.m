@@ -26,8 +26,8 @@ for i = 1:Q
         angle = atan2(Ts(2),Ts(1));
 %         z_comp = cross(T,Punit);
         z_comp = sin(angle)*Punit(1) - cos(angle)*Punit(2);
-        if Pmag <= sqrt(2)*(2*pi/k)/10
-            b(i,j) = (besselh(1,2,k*Pmag) - 1j*2/pi/(k*Pmag))*z_comp; %sqrt(So(1)^2+So(2)^2)*
+        if k*Pmag <= .01
+            b(i,j) = (besselh(1,2,k*Pmag))*z_comp;% - 1j*2/pi/(k*Pmag))*z_comp; %sqrt(So(1)^2+So(2)^2)*
 %               b(i,j) = 1j*2/pi/(k*Pmag);
         else
             b(i,j) = besselh(1,2,k*Pmag)*z_comp;

@@ -1,6 +1,7 @@
 %% Project #3 MOM
 % Authors: Dayo Lawal and Blake Levy
 clc;clear;clf;
+tic
 Q = [1]; % q-point Quadrature
 for G = 1:length(Q)
     q = Q(G);
@@ -8,7 +9,7 @@ for G = 1:length(Q)
     tol = 1e-11; % Tolerance for GMRES
     M = ceil(10*lamb0); % Number of elements
     N = M+1; % Number of nodes
-    r = pi*lamb0; % radius of circle
+    r = exp(1)*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
     % [P] = testpts(x(5),y(5),S(:,5),q);
     %% Z, V and I
@@ -40,6 +41,8 @@ for G = 1:length(Q)
        plot(abs(I./V))
     end
 end
+toc
+display(toc)
 hold off
 
 
