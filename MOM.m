@@ -2,12 +2,13 @@
 % Authors: Dayo Lawal and Blake Levy
 clc;clear;clf;
 tic
-Q = [1]; % q-point Quadrature
-for G = 1:length(Q)
-    q = Q(G);
+Qo = [1]; % q-point Quadrature
+for G = 1:length(Qo)
+    qo = Qo(G);
+    qs = 1;
     constants
     tol = 1e-11; % Tolerance for GMRES
-    M = ceil(10*lamb0); % Number of elements
+    M = ceil(2*lamb0); % Number of elements
     N = M+1; % Number of nodes
     r = exp(1)*lamb0; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
@@ -24,18 +25,22 @@ for G = 1:length(Q)
     R(2,:) = y;
     for i = 1:M
         for j = 1:M
-            if (i ~= j)
-                Z(i,j) = (k0/4/1j)*create_Z_notes(k0, S(:,i)/L(i), R(:,i), R(:,j),S(:,i),S(:,j),q);
-            end  
+            if (i ~= j) && abs(i - j) < 3
+                flag = true;
+                Z(i,j) = (k0/4/1j)*create_Z_notes(k0, S(:,i)/L(i), R(:,i), R(:,j),S(:,i),S(:,j),qs,qo,flag);
+            elseif (i~=j)
+                flag = false;
+                Z(i,j) = (k0/4/1j)*create_Z_notes(k0, S(:,i)/L(i), R(:,i), R(:,j),S(:,i),S(:,j),qs,qo,flag);
+            end
         end
-        V(i) = create_input(k0,theta1,Hzo,R(:,i),S(:,i),q);
+        V(i) = create_input(k0,theta1,Hzo,R(:,i),S(:,i),qs);
     end
 
 %     I = zeros(M,1);
 %     I = Z\V;
     I = gmres(Z,V,M,tol,M);
     hold on
-    if q == 10
+    if qs == 10
     plot(abs(I./V),'k')
     else
        plot(abs(I./V))
