@@ -13,8 +13,8 @@ function [ Z ] = create_Z_notes(k, Ts, rs, ro,Ss,So,Qs,Qo,flag)
 Ps = testpts(rs(1),rs(2),Ss,Qs);
 Po = testpts(ro(1),ro(2),So,Qo);
 b = zeros(Qs,Qo);
-for i = 1:Q
-    for j = 1:Q
+for i = 1:Qs
+    for j = 1:Qo
         P = Po(:,j)-Ps(:,i);
         Pmag = sqrt(P'*P);
         Punit = zeros(1,3);
@@ -27,18 +27,18 @@ for i = 1:Q
 %         z_comp = cross(T,Punit);
         z_comp = sin(angle)*Punit(1) - cos(angle)*Punit(2);
         if flag %k*Pmag <= .05
-            b(i,j) = (besselh(1,2,k*Pmag))*z_comp - 1j*2/pi/(k*Pmag)*z_comp; %sqrt(So(1)^2+So(2)^2)*
+            b(i,j) = ((besselh(1,2,k*Pmag))*z_comp - 1j*2/pi/(k*Pmag)*z_comp);%*sqrt(So(1)^2+So(2)^2);
 %               b(i,j) = 1j*2/pi/(k*Pmag);
         else
-            b(i,j) = besselh(1,2,k*Pmag)*z_comp;
+            b(i,j) = (besselh(1,2,k*Pmag)*z_comp);%*sqrt(So(1)^2+So(2)^2);
         end
     end
 end
 
 if flag
-    Z = (b*wo')'*ws' + ; %+ add the analytic solution for singularity
+    Z = (b*wo')' + 1j*2/pi*log(k*Pmag)*z_comp; %+ add the analytic solution for singularity
 else
-    Z = (b*wo')'*ws';
+    Z = (b*wo')';
 end
 % V = (w*b')*w';
 end

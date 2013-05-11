@@ -36,9 +36,9 @@ for i = 1:Qs
 end
 
 if flag
-    Z = (b*wo')'*ws' + 1j*2*log(k*Pmag); %+ add the analytic solution for singularity
+    Z = (b*wo') + 1j*2/pi*log(k*Pmag)*z_comp; %+ add the analytic solution for singularity
 else
-    Z = (b*wo')'*ws';
+    Z = (b*wo');
 end
 % V = (w*b')*w';
 end
