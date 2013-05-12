@@ -7,9 +7,10 @@ qs = 1;
 tol = 1e-11; % Tolerance for GMRES
 M = 149; % Number of elements
 N = M+1; % Number of nodes
-ka = 8;
+ka = 10;
 r = ka/k0;
-Qo = [1]; % q-point Quadrature
+Qo = [1 3 10]; % q-point Quadrature
+I = zeros(M,3);
 %%
 for G = 1:length(Qo)
     qo = Qo(G);
@@ -40,46 +41,41 @@ for G = 1:length(Qo)
         V(i) = create_input(k0,theta,Hzo,R(:,i),S(:,i),qs);
     end
 
-%     I = zeros(M,1);
+
 %     I = Z\V;
-    I = gmres(Z,V,M,tol,M);
-    if Qo == 5
-%     plot(abs(I),'k')
-    else
-%        plot(abs(I))
-    end
+    I(:,G) = gmres(Z,V,M,tol,M);
 end
+    plot(1:1:M,abs(I(:,1)),'r',1:1:M,abs(I(:,2)),'b',1:1:M,abs(I(:,3)),'k')
 %% Post Processing
-sigma = k0/4*ones(1,length(phi));
-for p = 1:length(phi)
+s = k0/4*ones(1,length(I));
+% Scattering OF PEC from Surface Current
+for p = 1:length(I)
     angle = phi(p);
     sum = 0;
     for h = 1:M
         omega = atan2(S(2,h)/L(h),S(1,h)/L(h));
-        sum = I(h)*L(h)*sin(angle - 
-        
-        
+        sum = sum + I(h)*L(h)*sin(omega - angle)*exp(1j*k0*(R(1,h)*cos(angle)+R(2,h)*sin(angle)));      
     end
-    
-    
-    
+    s(p) = s(p)*abs(sum)^2;  
 end
-
-
-
-
-
-[current, scatter] = analytical_MFIE(M,k0,r);
+% Get analytical Solution
+[current, scatter] = analytical_MFIE(M/2,k0,r);
 % I(2:end) = .5*(I(1:end-1)+I(2:end));
 % clf;
 % I(1) = (I(1)+I(end))/2;
 subplot(2,2,1)
-plot(1:1:M,abs(current),'r--',1:1:M,abs(I),'k')
+plot(1:1:M/2,abs(current),'r--',1:1:M,abs(I(:,1)),'k')
+legend('Analytical','MOM'); title(strcat('Surface Current ka = ',num2str(ka)))
 subplot(2,2,2)
-error = 100*abs(((current')-(I))./(current'));
+error = 100*abs(((current')-(I(:,1)))./(current'));
+title(error)
 plot(1:1:M,error)
 subplot(2,2,3)
 plot(1:1:M,10*log10(abs(scatter)),'k--')
+title('Analytic Scattered Field')
+subplot(2,2,4)
+plot(1:1:M,10*log10(s))
+title('MOM Scattered Field')
 toc
 display(toc)
 hold off
