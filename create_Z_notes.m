@@ -38,7 +38,7 @@ end
 if flag
     Z = (b*wo') + 1j*2/pi*log(k*Pmag)*z_comp; %+ add the analytic solution for singularity
 else
-    Z = (b*wo');
+    Z = (b*wo')*sqrt(So(1)^2+So(2)^2);
 end
 % V = (w*b')*w';
 end

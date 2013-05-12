@@ -10,12 +10,12 @@ for G = 1:length(Qo)
     tol = 1e-11; % Tolerance for GMRES
     M = 160; % Number of elements
     N = M+1; % Number of nodes
-    r = 20*pi; % radius of circle
+    r = 10*lamb0/2/pi; % radius of circle
     [x y theta S slope L] = mesh_circle(M,r);
     % [P] = testpts(x(5),y(5),S(:,5),q);
     %% Z, V and I
     theta1 = 0*pi/180;
-    Hzo = 1;
+    Hzo = sqrt(eps0/mu0);
     V = zeros(M,1);
 %     [V, m] = create_input(x,y,k0, theta1, Ez0);
     % plot(x,y,'r',P(1),P(2),'+k',m(1,:),m(2,:),'ko')
@@ -40,10 +40,10 @@ for G = 1:length(Qo)
 %     I = Z\V;
     I = gmres(Z,V,M,tol,M);
     hold on
-    if qs == 10
-    plot(abs(I./V),'k')
+    if Qo == 5
+    plot(abs(I),'k')
     else
-       plot(abs(I./V))
+       plot(abs(I))
     end
 end
 toc
