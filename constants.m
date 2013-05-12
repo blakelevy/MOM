@@ -10,3 +10,4 @@ f = pi*1e6; % initial frequency
 w = 2*pi*f;
 k0 = w/c;
 lamb0 = c/f;
+eta = sqrt(mu0/eps0);
