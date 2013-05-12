@@ -10,7 +10,8 @@ for G = 1:length(Qo)
     tol = 1e-11; % Tolerance for GMRES
     M = 160; % Number of elements
     N = M+1; % Number of nodes
-    r = lamb0/2/pi; % radius of circle
+    r = 4*lamb0/2/pi; % radius of circle
+    close = 3;
     [x y theta S slope L] = mesh_circle(M,r);
     % [P] = testpts(x(5),y(5),S(:,5),q);
     %% Z, V and I
@@ -29,15 +30,15 @@ for G = 1:length(Qo)
         for j = 1:M   
             if (j == 1 && i ~=1)
                 r_s = [R(:,i) R(:,i-1) R(:,i+1)];
-                r_o = [R(:,j) R(:,end) R(:,j+1)];
+                r_o = [R(:,j) R(:,end-1) R(:,j+1)];
             elseif (i == 1 && j~=1)
-                r_s = [R(:,i) R(:,end) R(:,i+1)];
+                r_s = [R(:,i) R(:,end-1) R(:,i+1)];
                 r_o = [R(:,j) R(:,j-1) R(:,j+1)];
             elseif (i == 1 && j==1)
-                r_s = [R(:,i) R(:,end) R(:,i+1)];
-                r_o = [R(:,j) R(:,end) R(:,j+1)];
+                r_s = [R(:,i) R(:,end-1) R(:,i+1)];
+                r_o = [R(:,j) R(:,end-1) R(:,j+1)];
             elseif (i ~= M && j==M)
-                r_s = [R(:,i) R(:,end) R(:,i+1)];
+                r_s = [R(:,i) R(:,end-1) R(:,i+1)];
                 r_o = [R(:,j) R(:,j-1) R(:,1)];
             elseif (i == M && j~=M)
                 r_s = [R(:,i) R(:,i-1) R(:,1)];
@@ -47,19 +48,17 @@ for G = 1:length(Qo)
                 r_o = [R(:,j) R(:,j-1) R(:,j+1)]; 
             end
 %             if (i ~= j) && abs(i - j) < 3
-            if abs(i - j) < 3
-                flag = false;
-                Z(i,j) = (1/1j/w/eps0)*create_Z_notes_EFIE(k0,eta0,...
+            if abs(i - j) < close || abs(i-j)> M-close
+                Z(i,j) = create_Z_notes_EFIE_s(k0,eta0,...
                     S(:,j)/L(j),r_s,r_o);
 %             elseif (i~=j)
             else
-                flag = false;
-                Z(i,j) = (1/1j/w/eps0)*create_Z_notes_EFIE(k0,eta0,...
+                Z(i,j) = create_Z_notes_EFIE(k0,eta0,...
                     S(:,j)/L(j),r_s,r_o);
             end
         end
         if i == 1
-            r_s = [R(:,i) R(:,end) R(:,i+1)];
+            r_s = [R(:,i) R(:,end-1) R(:,i+1)];
 %             r_s = [R(:,temp) R(:,end)];
             V(i) = create_input_EFIE(k0,phi,Ezo,r_s);
         elseif i == M
