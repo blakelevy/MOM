@@ -5,9 +5,14 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 1200; % Number of elements
-ds = 3;
+M = 200; % Number of elements
 M_max = 400;
+if M > M_max
+   ds = M/M_max; 
+elseif M_max > M
+   ds = M_max/M;
+else
+end
 N = M+1; % Number of nodes
 ka = 21*pi;
 r = ka/k0;
@@ -45,7 +50,7 @@ for G = 1:length(Qo)
 
 
 %     I = Z\V;
-    I(:,G) = gmres(Z,V,M,tol,M);
+    I = gmres(Z,V,M,tol,M);
 end
 %     plot(1:1:M,abs(I(:,1)),'r',1:1:M,abs(I(:,2)),'b',1:1:M,abs(I(:,3)),'k')
 %% Post Processing
@@ -61,23 +66,41 @@ for p = 1:length(I)
     s(p) = s(p)*abs(sum)^2;  
 end
 % Get analytical Solution
+if M > M_max
+    degree = 0:360/M_max:360;
+    degree = degree(1:end-1);
+elseif M_max > M
+    degree = 0:360/M:360;
+    degree = degree(1:end-1);
+else
+end
 [current, scatter] = analytical_MFIE(M_max,k0,r);
 % I(2:end) = .5*(I(1:end-1)+I(2:end));
 % clf;
 % I(1) = (I(1)+I(end))/2;
+if M>M_max
+   I = downsample(I,ds); 
+elseif M_max > M
+   current = downsample(current,ds); 
+   scatter = downsample(current,ds);
+else
+end
 subplot(2,2,1)
-plot(1:1:M_max,abs(current),'r--',1:1:M,abs(I(:,1)),'k')
+plot(degree,abs(current),'r--',degree,abs(I(:,1)),'k')
 legend('Analytical','MOM'); title(strcat('Surface Current ka = ',num2str(ka)))
 subplot(2,2,2)
 % error = 100*abs(((current')-(I(:,1)))./(current'));
-error = norm((current-I(:,1)'),2)/norm(current,2);
-title(error)
-plot(1:1:M,error)
+% error = norm((current-I(:,1)'),2)/norm(current,2);
+E = abs(abs(current)-abs(I(:,1)'))./abs(current);
+clear sum
+title('error')
+plot(degree,E)
+E = sum(E)/length(E)
 subplot(2,2,3)
-plot(1:1:M,10*log10(abs(scatter)),'k--')
+plot(degree,10*log10(abs(scatter)),'k--')
 title('Analytic Scattered Field')
 subplot(2,2,4)
-plot(1:1:M,10*log10(s))
+plot(degree,10*log10(s))
 title('MOM Scattered Field')
 toc
 display(toc)
