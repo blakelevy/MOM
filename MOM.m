@@ -5,9 +5,9 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 300; % Number of elements
+M = 160; % Number of elements
 N = M+1; % Number of nodes
-ka = 8;
+ka = 4;
 r = ka/k0;
 Qo = [1]; % q-point Quadrature
 I = zeros(M,3);
@@ -67,7 +67,8 @@ subplot(2,2,1)
 plot(1:1:M,abs(current),'r--',1:1:M,abs(I(:,1)),'k')
 legend('Analytical','MOM'); title(strcat('Surface Current ka = ',num2str(ka)))
 subplot(2,2,2)
-error = 100*abs(((current')-(I(:,1)))./(current'));
+% error = 100*abs(((current')-(I(:,1)))./(current'));
+error = norm((current-I(:,1)'),2)/norm(current,2);
 title(error)
 plot(1:1:M,error)
 subplot(2,2,3)
