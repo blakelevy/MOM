@@ -5,7 +5,9 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 750; % Number of elements
+M = 800; % Number of elements
+ds = 2;
+M_max = M/ds;
 N = M+1; % Number of nodes
 ka = 21*pi;
 r = ka/k0;
@@ -59,12 +61,12 @@ for p = 1:length(I)
     s(p) = s(p)*abs(sum)^2;  
 end
 % Get analytical Solution
-[current, scatter] = analytical_MFIE(M,k0,r);
+[current, scatter] = analytical_MFIE(M_max,k0,r);
 % I(2:end) = .5*(I(1:end-1)+I(2:end));
 % clf;
 % I(1) = (I(1)+I(end))/2;
 subplot(2,2,1)
-plot(1:1:M,abs(current),'r--',1:1:M,abs(I(:,1)),'k')
+plot(1:1:M_max,abs(current),'r--',1:1:M,abs(I(:,1)),'k')
 legend('Analytical','MOM'); title(strcat('Surface Current ka = ',num2str(ka)))
 subplot(2,2,2)
 % error = 100*abs(((current')-(I(:,1)))./(current'));
