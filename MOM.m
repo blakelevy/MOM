@@ -5,9 +5,9 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 800; % Number of elements
-ds = 2;
-M_max = M/ds;
+M = 1200; % Number of elements
+ds = 3;
+M_max = 400;
 N = M+1; % Number of nodes
 ka = 21*pi;
 r = ka/k0;
@@ -49,7 +49,7 @@ for G = 1:length(Qo)
 end
 %     plot(1:1:M,abs(I(:,1)),'r',1:1:M,abs(I(:,2)),'b',1:1:M,abs(I(:,3)),'k')
 %% Post Processing
-s = k0/4*ones(1,length(I));
+s = eta0^2*k0/4*ones(1,length(I));
 % Scattering OF PEC from Surface Current
 for p = 1:length(I)
     angle = phi(p);
