@@ -5,7 +5,7 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 200; % Number of elements
+M = 1600; % Number of elements
 M_max = 400;
 if M > M_max
    ds = M/M_max; 
