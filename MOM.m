@@ -5,9 +5,9 @@ tic
 constants
 qs = 1;
 tol = 1e-11; % Tolerance for GMRES
-M = 160; % Number of elements
+M = 750; % Number of elements
 N = M+1; % Number of nodes
-ka = 4;
+ka = 21*pi;
 r = ka/k0;
 Qo = [1]; % q-point Quadrature
 I = zeros(M,3);
