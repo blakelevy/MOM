@@ -13,40 +13,44 @@ function [ Z ] = create_Z_notes_EFIE_s(k0,eta0,To,r_s,r_o)
 m_o = [(.5*((r_o(:,1)-r_o(:,2)))+r_o(:,2)) (.5*((r_o(:,3)-r_o(:,1)))+r_o(:,1))];
 m_s = [(.5*((r_s(:,1)-r_s(:,2)))+r_s(:,2)) (.5*((r_s(:,3)-r_s(:,1)))+r_s(:,1))];
 % Distances
-P_a = r_o(:,1)-r_s(:,1);
+P_a = r_s(:,1)-r_o(:,1);
 P_b = m_s(:,2)-m_o(:,1);
 P_c = m_s(:,1)-m_o(:,1);
 P_d = m_s(:,2)-m_o(:,2);
 P_e = m_s(:,1)-m_o(:,2);
-distance = [P_a P_b P_c P_d P_e]; 
+dist = sqrt(sum([P_a P_b P_c P_d P_e].*[P_a P_b P_c P_d P_e])); 
 L = sqrt((r_o(1,2)-r_o(1,1))^2 + (r_o(2,2)-r_o(2,1))^2);
 
 % Term A
-R_a = sqrt(P_a'*P_a);
-dist_a = abs(r_o(:,1)-m_s(:,2))*xl;
-dist_a = sqrt(sum(dist_a.*dist_a));
-A = 2*(k0*eta0*L/4)*((m_s(:,2)-m_s(:,1))'*To)*(besselh(0,2,k0*dist_a)*wl');
-% A = (k0*eta0*L/4)*((m_s(:,2)-m_s(:,1))'*To)*besselh(0,2,k0*R_a);
+if dist(1) == 0
+    A = 2*(k0*eta0*L/4)*((m_s(:,2)-m_s(:,1))'*To)*(besselh(0,2,k0*xl)*wl');
+else
+    A = (k0*eta0*L/4)*((m_s(:,2)-m_s(:,1))'*To)*(besselh(0,2,k0*dist(1)));
+end
 %Term B
-R_b = sqrt(P_b'*P_b);
-dist_b = ((m_o(:,1)-r_o(:,1))*xl + m_o(:,1)*ones(1,length(wl)))-m_s(:,2)*ones(1,length(wl));
-dist_b = sqrt(sum(dist_b.*dist_b));
-B = 2*(eta0/4/k0)*(besselh(0,2,k0*dist_b)*wl');
+if dist(2) == 0
+    B = 2*(eta0/4/k0)*(besselh(0,2,k0*xl)*wl');
+else
+    B = (eta0/4/k0)*(besselh(0,2,k0*dist(2)));
+end
 %Term C
-R_c = sqrt(P_c'*P_c);
-dist_c = ((m_o(:,1)-r_o(:,1))*xl + m_o(:,1)*ones(1,length(wl)))-m_s(:,1)*ones(1,length(wl));
-dist_c = sqrt(sum(dist_c.*dist_c));
-C = 2*(eta0/4/k0)*(besselh(0,2,k0*dist_c)*wl');
+if dist(3) == 0
+    C = 2*(eta0/4/k0)*(besselh(0,2,k0*xl)*wl');
+else
+    C = (eta0/4/k0)*(besselh(0,2,k0*dist(3)));
+end
 %Term D
-R_d = sqrt(P_d'*P_d);
-dist_d = ((m_o(:,2)-r_o(:,1))*xl + m_o(:,2)*ones(1,length(wl)))-m_s(:,2)*ones(1,length(wl));
-dist_d = sqrt(sum(dist_d.*dist_d));
-D = 2*(eta0/4/k0)*(besselh(0,2,k0*dist_d)*wl');
+if dist(4) == 0
+    D = 2*(eta0/4/k0)*(besselh(0,2,k0*xl)*wl');
+else
+    D = (eta0/4/k0)*(besselh(0,2,k0*dist(4)));
+end
 %Term E
-R_e = sqrt(P_e'*P_e);
-dist_e = ((m_o(:,2)-r_o(:,1))*xl + m_o(:,2)*ones(1,length(wl)))-m_s(:,1)*ones(1,length(wl));
-dist_e = sqrt(sum(dist_e.*dist_e));
-E = 2*(eta0/4/k0)*(besselh(0,2,k0*dist_e)*wl');
+if dist(5) == 0
+    E = 2*(eta0/4/k0)*(besselh(0,2,k0*xl)*wl');
+else
+    E = (eta0/4/k0)*(besselh(0,2,k0*dist(5)));
+end
 Z = A + B - C -D + E;
 
 

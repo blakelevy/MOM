@@ -48,14 +48,14 @@ for G = 1:length(Qo)
                 r_o = [R(:,j) R(:,j-1) R(:,j+1)]; 
             end
 %             if (i ~= j) && abs(i - j) < 3
-            if abs(i - j) < close || abs(i-j)> M-close
+%             if abs(i - j) < close || abs(i-j)> M-close
                 Z(i,j) = create_Z_notes_EFIE_s(k0,eta0,...
                     S(:,j)/L(j),r_s,r_o);
 %             elseif (i~=j)
-            else
-                Z(i,j) = create_Z_notes_EFIE(k0,eta0,...
-                    S(:,j)/L(j),r_s,r_o);
-            end
+%             else
+%                 Z(i,j) = create_Z_notes_EFIE_s(k0,eta0,...
+%                     S(:,j)/L(j),r_s,r_o);
+%             end
         end
         if i == 1
             r_s = [R(:,i) R(:,end-1) R(:,i+1)];
