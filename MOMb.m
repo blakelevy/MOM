@@ -1,45 +1,50 @@
 % MOMb
+%% Project #3 MOM
+% Authors: Dayo Lawal and Blake Levy
+clc
 constants;
+Q = 1;
+tol = 1e-11;
 M = 160;
-ka = 4;
-a = ka/(2*pi);
-ko = 2*pi;
+ka = 8;
+a = ka/k0;
 N = M;
-dp = (2*pi)/N;
-p = @(x) x*dp;
-pc = @(x) p(x)+dp/2;
-nc = @(x) [cos(pc(x)); sin(pc(x)); 0];
-tc = @(x) [-sin(pc(x)); cos(pc(x)); 0];
-rc = @(x) nc(x)*a;
-rp = @(x,y) rc(x) + tc(x)*(y-0.5)*dl;
-rhp = @(x,y) rc(x) + tc(x)*y*dl/2;
-rhpm = @(x,y) rc(x) - tc(x)*(1-y)*dl/2;
-dl = a*dp;
-K1 = ko*eta*dl/4;
-K2 = eta/(4*ko);
-kv = [ko; 0; 0];
-Einc = @(x)[0; 1; 0]*exp(-1j*kv'*rp(x,0));
+dtheta = (2*pi)/N;
+theta = @(x) x*dtheta;
+thetam = @(x) theta(x)+dtheta/2;
+Norm = @(x) [cos(thetam(x)); sin(thetam(x)); 0];
+Tm = @(x) [-sin(thetam(x)); cos(thetam(x)); 0];
+Pm = @(x) Norm(x)*a;
+Pmm1 = @(x,y) Pm(x) + Tm(x)*(y-0.5)*dl;
+Pmp1 = @(x,y) Pm(x) + Tm(x)*y*dl/2;
+rhpm = @(x,y) Pm(x) - Tm(x)*(1-y)*dl/2;
+dl = a*dtheta;
+K1 = k0*eta0*dl/4;
+K2 = eta0/(4*k0);
+kv = [k0; 0; 0];
+Einc = @(x)[0; 1; 0]*exp(-1j*kv'*Pmm1(x,0));
 Z = zeros(N,N);
 V = zeros(N,1);
-for j=0:N-1
-    for i=0:N-1
-        Av = K1*(intAm(j,i, N,dl,rc,tc, rp, rhp, ko) ... 
-               + intAp(j,i, N,dl,rc,tc, rp, rhpm, ko));
-        Phie = K2*(intP(j, i-1, N, dl, rc, tc, rp, ko) ...
-               - intP(j-1, i-1, N, dl, rc, tc, rp, ko) ... 
-               - intP(j, i, N, dl, rc, tc, rp, ko) ...
-               + intP(j-1, i, N, dl, rc, tc, rp, ko));    
+for i=0:N-1
+    for j=0:N-1
+        Av = K1*(intAm(i,j, N,dl,Pm,Tm, Pmm1, Pmp1, k0, Q) ... 
+               + intAp(i,j, N,dl,Pm,Tm, Pmm1, rhpm, k0, Q));
+        Phie = K2*(intP(i, j-1, N, dl, Pm, Tm, Pmm1, k0, Q) ...
+               - intP(i-1, j-1, N, dl, Pm, Tm, Pmm1, k0, Q) ... 
+               - intP(i, j, N, dl, Pm, Tm, Pmm1, k0, Q) ...
+               + intP(i-1, j, N, dl, Pm, Tm, Pmm1, k0, Q));    
          Z(i+1,j+1) = Av + Phie;
     end
 end
 
-for j = 0:N-1;
-    jm1 = mom_cycle(j-1,N);
-    V(j+1) = (rc(j)-rc(jm1))'*Einc(j);
+for i = 0:N-1;
+    im1 = mom_cycle(i-1,N);
+    V(i+1) = (Pm(i)-Pm(im1))'*Einc(i);
 end
 
 I = gmres(Z,V,M,tol,M);
-theta = arrayfun(pc,i);
+i = 0:N-1;
+theta = arrayfun(thetam,i);
 plot(theta*180/pi,abs(I));
 
 
