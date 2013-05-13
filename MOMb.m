@@ -6,7 +6,7 @@ constants;
 Q = 1;
 tol = 1e-11;
 M = 160;
-ka = 8;
+ka = 4;
 a = ka/k0;
 N = M;
 dtheta = (2*pi)/N;
